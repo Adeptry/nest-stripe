@@ -1,0 +1,29 @@
+{
+  "name": "nest-stripe",
+  "version": "0.9.0",
+  "type": "module",
+  "description": "NestJS module for Stripe Node.js SDK",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "Stripe",
+    "Nest"
+  ],
+  "author": "Paul Jones",
+  "license": "MIT",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "p-retry": "^6.1.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.2.6",
+    "@nestjs/config": "^3.1.1",
+    "stripe": "^13.7.0"
+  }
+}
