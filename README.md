@@ -11,7 +11,7 @@ Nest-Stripe is a NestJS module for integrating Stripe into your application. Thi
 ## Installation
 
 ```bash
-npm install nest-stripe @nestjs/common @nestjs/config stripe
+npm install nest-stripe2 @nestjs/common @nestjs/config stripe
 ```
 
 Nest.js and Stripe are peer dependencies.
@@ -19,7 +19,7 @@ Nest.js and Stripe are peer dependencies.
 ## Quick Start
 
 ```typescript
-import { NestStripeModule } from "nest-stripe";
+import { NestStripeModule } from "nest-stripe2";
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { NestStripeModule } from "nest-stripe";
 export class YourModule {}
 ```
 
-If you set `STRIPE_API_KEY`, you may:
+If you set the `STRIPE_API_KEY` environment variable, you may:
 
 ```typescript
 @Module({
@@ -58,21 +58,37 @@ export class YourController {
 
   @Get()
   async yourRoute() {
-    const session = await this.stripeService.retryOrThrow((stripe) =>
-      stripe.billingPortal.sessions.create({
-        customer: stripeId,
-        return_url: returnUrl,
+    const stripeCustomer = await this.stripeService.retryOrThrow((client) =>
+      client.customers.create({
+        email: user.email,
+        phone: user.phoneNumber,
+        name: user.firstName,
       })
     );
   }
 }
 ```
 
-If you do not want to use the retry higher-order-function, you may get a client directly.
+If you do not want to use the retry higher-order-function, you may use the client directly.
+
+```typescript
+await this.stripeService.client.billingPortal.sessions.create({
+  return_url: "http://localhost:3000",
+  customer: stripeCustomer?.id,
+});
+```
+
+### Version
+
+From Stripe:
+
+> If you wish to remain on your account's default API version, you may pass null or another version instead of the latest version, and add a @ts-ignore comment here and anywhere the types differ between API versions.
+
+This library passes null for the API version.
 
 ### Retry
 
-The `retryOrThrow` method provides a built-in retry mechanism for dealing with transient issues in your API calls. It retries the provided client function multiple times before eventually throwing an error if all attempts are unsuccessful. This packages uses the default configuration of `p-retry`, and only retries HTTP >500 and 429, denoting an internal Square error or too many requests respectively.
+The `retryOrThrow` method provides a built-in retry mechanism for dealing with transient issues in your API calls. It retries the provided client function multiple times before eventually throwing an error if all attempts are unsuccessful. This package uses the default configuration of `p-retry`, and only retries HTTP >500 and 429, denoting an internal Square error or too many requests respectively.
 
 If you find that in the course of development you trigger a 429, you are likely doing something wrong.
 
@@ -82,10 +98,10 @@ If you find that in the course of development you trigger a 429, you are likely 
 
 ### Webhooks
 
-If you would like to receive and propogate Stripe webhooks, consider the following:
+If you would like to receive and propagate Stripe webhooks, consider the following:
 
 ```typescript
-@Controller("tripe/webhook")
+@Controller("stripe/webhook")
 export class StripeWebhookController {
   private readonly logger = new Logger(StripeWebhookController.name);
   constructor(
@@ -101,7 +117,7 @@ export class StripeWebhookController {
   @Post()
   post(
     @Headers("stripe-signature") signature: string,
-    @Req() request: RawBodyRequest<Request>,
+    @Req() request: RawBodyRequest<Request>, // essential
     @Res({ passthrough: true }) response: Response
   ) {
     this.logger.verbose(this.post.name);

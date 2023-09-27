@@ -19,7 +19,7 @@ import { NestStripeConfig } from "./nest-stripe.config.js";
 export class NestStripeService {
   private readonly logger = new Logger(NestStripeService.name);
 
-  readonly stripe: Stripe;
+  readonly client: Stripe;
 
   constructor(
     @Inject(NestStripeConfig.KEY)
@@ -27,7 +27,7 @@ export class NestStripeService {
   ) {
     this.logger.verbose(this.constructor.name);
 
-    this.stripe = new Stripe(this.config.apiKey, {
+    this.client = new Stripe(this.config.apiKey, {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
       apiVersion: null,
@@ -43,7 +43,7 @@ export class NestStripeService {
    */
   retryOrThrow<T>(stripeFn: (stripe: Stripe) => Promise<T>): Promise<T> {
     this.logger.verbose(this.retryOrThrow.name);
-    return this.pRetryOrThrow(() => stripeFn(this.stripe));
+    return this.pRetryOrThrow(() => stripeFn(this.client));
   }
 
   private async pRetryOrThrow<T>(fn: () => Promise<T>): Promise<T> {
