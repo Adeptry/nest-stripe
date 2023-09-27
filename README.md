@@ -37,7 +37,7 @@ If you set `STRIPE_API_KEY`, you may:
 ```typescript
 @Module({
   imports: [
-    NestStripeModule.forEnv(),
+    NestStripeModule.fromEnv(),
   ],
   controllers: [YourController],
 })
