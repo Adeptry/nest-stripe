@@ -5,7 +5,7 @@ Nest-Stripe is a NestJS module for integrating Stripe into your application. Thi
 ## Features
 
 - Easy-to-use Stripe service that can be injected into your classes.
-- Environment, Synchronous, Asynchronous initialization.
+- Environment, Synchronous, and Asynchronous initialization.
 - Retrying
 
 ## Installation
@@ -105,7 +105,7 @@ If you would like to receive and propagate Stripe webhooks, consider the followi
 export class StripeWebhookController {
   private readonly logger = new Logger(StripeWebhookController.name);
   constructor(
-    private readonly service: NestStripeService,
+    private readonly stripeService: NestStripeService,
     @Inject(MyConfig.KEY)
     private readonly config: ConfigType<typeof MyConfig>,
     private readonly eventEmitter: EventEmitter2
@@ -133,7 +133,7 @@ export class StripeWebhookController {
     let event: Stripe.Event | undefined;
 
     try {
-      event = this.service.stripe.webhooks.constructEvent(
+      event = this.stripeService.client.webhooks.constructEvent(
         request.rawBody,
         signature,
         this.config.stripeWebhookSecret
