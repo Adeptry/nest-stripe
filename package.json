@@ -1,6 +1,6 @@
 {
   "name": "nest-stripe2",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "NestJS module for Stripe Node.js SDK",
   "main": "dist/index.js",
