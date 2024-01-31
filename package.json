@@ -2,8 +2,8 @@
   "author": "Paul Jones",
   "dependencies": {
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0",
-    "p-retry": "^6.1.0"
+    "class-validator": "^0.14.1",
+    "p-retry": "^6.2.0"
   },
   "description": "NestJS module for Stripe Node.js SDK",
   "files": [
@@ -19,11 +19,11 @@
   "peerDependencies": {
     "@nestjs/common": "^10.2.7",
     "@nestjs/config": "^3.1.1",
-    "stripe": "^14.1.0"
+    "stripe": "^14.14.0"
   },
   "scripts": {
     "build": "tsc"
   },
   "type": "module",
-  "version": "1.0.1"
+  "version": "14.14.0"
 }
